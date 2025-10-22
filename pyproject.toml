@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "oceanmetrics"
+version = "0.0.1"
+dependencies = [
+    "numpy>=1.21",
+    "pandas>=2.3.1",
+    "netCDF4>=1.7.2"
+]
+authors = [
+  { name="Oscar Tovey Garcia", email="otoveyg@gmail.com" },
+]
+description = "Python functions for computing metrics from Oceananigans.jl model netCDF output"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICENSE"]
+
+[project.urls]
+Homepage = "https://github.com/oscarjtg/ocean-metrics"
+Issues = "https://github.com/oscarjtg/ocean-metrics/issues"

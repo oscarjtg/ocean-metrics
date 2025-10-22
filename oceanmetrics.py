@@ -67,3 +67,86 @@ def apply_metric(func, *args, parameter_file="./parameters.txt"):
         val_list.append(val)
     return val_list
 
+def vorty_zx(u_zx, w_zx, xC, xF, zC, zF):
+    """
+    Calculates y components of vorticity,
+
+    vorty[z, x] = dw[z, x]/dx - du[z, x]/dz,
+
+    where u and w are horizontal and vertical velocity components calculated on a staggered grid.
+
+    Parameters
+    ----------
+    u_zx (np.ndarray)
+        Two-dimensional numpy array containing velocity component in x direction at (zC, xF).
+
+    w_zx (np.ndarray)
+        Two-dimensional numpy array containing velocity component in z direction at (zF, xC).
+
+    xC (np.ndarray)
+        One-dimensional numpy array containing the x-coordinates of the cell centers.
+
+    xF (np.ndarray)
+        One-dimensional numpy array containing the x-coordinates of the cell faces.
+
+    zC (np.ndarray)
+        One-dimensional numpy array containing the z-coordinates of the cell centers.
+
+    zF (np.ndarray)
+        One-dimensional numpy array containing the z-coordinates of the cell faces.
+
+    Returns
+    -------
+    vorty_zx (np.ndarray)
+        Two-dimensional numpy containing the y-component of vorticity at (zF, xF).
+    """
+    dwdx = (w_zx[:, 1:] - w_zx[:, :-1]) / (xC[None, 1:] - xC[None, :-1])
+    dudz = (u_zx[1:, :] - u_zx[:-1, :]) / (zC[1:, None] - zC[:-1, None])
+    vorty = np.zeros((zF.shape[0], xF.shape[0]))
+    vorty[:, 1:-1] += dwdx 
+    vorty[1:-1, :] -= dudz
+    return vorty
+
+def vorty_tzx(u_tzx, w_tzx, xC, xF, zC, zF):
+    """
+    Calculates y components of vorticity,
+
+    vorty[t, z, x] = dw[t, z, x]/dx - du[t, z, x]/dz,
+
+    where u and w are horizontal and vertical velocity components calculated on a staggered grid.
+
+    Parameters
+    ----------
+    u_tzx (np.ndarray)
+        Three-dimensional numpy array containing velocity component in x direction at (time, zC, xF).
+
+    w_tzx (np.ndarray)
+        Three-dimensional numpy array containing velocity component in z direction at (time, zF, xC).
+
+    xC (np.ndarray)
+        One-dimensional numpy array containing the x-coordinates of the cell centers.
+
+    xF (np.ndarray)
+        One-dimensional numpy array containing the x-coordinates of the cell faces.
+
+    zC (np.ndarray)
+        One-dimensional numpy array containing the z-coordinates of the cell centers.
+
+    zF (np.ndarray)
+        One-dimensional numpy array containing the z-coordinates of the cell faces.
+
+    Returns
+    -------
+    vorty_tzx (np.ndarray)
+        Three-dimensional numpy containing the y-component of vorticity at (time, zF, xF).
+
+    """
+    dwdx = (w_tzx[:, :, 1:] - w_tzx[:, :, :-1]) / (xC[None, None, 1:] - xC[None, None, :-1])
+    dudz = (u_tzx[:, 1:, :] - u_tzx[:, :-1, :]) / (zC[None, 1:, None] - zC[None, :-1, None])
+    vorty = np.zeros((u_tzx.shape[0], zF.shape[0], xF.shape[0]))
+    vorty[:, :, 1:-1] += dwdx 
+    vorty[:, 1:-1, :] -= dudz
+    return vorty
+
+
+

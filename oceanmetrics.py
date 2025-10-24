@@ -149,4 +149,18 @@ def vorty_tzx(u_tzx, w_tzx, xC, xF, zC, zF):
     return vorty
 
 
+def kinetic_energy(u, w, xF, zF, rhow=1025):
+    """2d kinetic energy calculation"""
+    # interpolate u and w onto cell centres
+    uCC = (u[:, :, 1:] + u[:, :, :-1]) * 0.5
+    wCC = (w[:, 1:, :] + w[:, :-1, :]) * 0.5
 
+    # lengths of grid boxes
+    dx = xF[1:] - xF[:-1]
+    dz = zF[1:] - zF[:-1]
+
+    # areas of grid boxes
+    areas = dx[None, :] * dz[:, None]
+
+    # compute kinetic energy
+    return 0.5 * rhow * (uCC**2 + wCC**2) * areas[None, :, :]

@@ -164,3 +164,21 @@ def kinetic_energy(u, w, xF, zF, rhow=1025):
 
     # compute kinetic energy
     return 0.5 * rhow * (uCC**2 + wCC**2) * areas[None, :, :]
+
+def potential_energy(b, xF, zF, zC, rhow=1025):
+    """Calculates PE relative to ambient stratification, defined as PE = integral of rho_w (b_a - b) z dA"""
+    # lengths of grid boxes
+    dx = xF[1:] - xF[:-1]
+    dz = zF[1:] - zF[:-1]
+
+    # areas of grid boxes
+    areas = dx[None, :] * dz[:, None]
+
+    # ambient buoyancy
+    b0 = b[0, :, -1]
+
+    # change in buoyancy
+    delta_b = b0[None, :, None] - b
+
+    # compute potential energy
+    return rhow * delta_b * zC[None, :, None] * areas[None, :, :]
